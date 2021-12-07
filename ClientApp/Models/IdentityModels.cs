@@ -29,5 +29,27 @@ namespace ClientApp.Models
         {
             return new ApplicationDbContext();
         }
+
+        public virtual DbSet<Client> Clients { get; set; }
+        public virtual DbSet<ClientContact> ClientContacts { get; set; }
+        public virtual DbSet<Contact> Contacts { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Client>()
+                .HasOptional(e => e.Client1)
+                .WithRequired(e => e.Client2);
+
+            modelBuilder.Entity<Client>()
+                .HasMany(e => e.ClientContacts)
+                .WithOptional(e => e.Client)
+                .WillCascadeOnDelete();
+
+            modelBuilder.Entity<Contact>()
+                .HasMany(e => e.ClientContacts)
+                .WithOptional(e => e.Contact)
+                .WillCascadeOnDelete();
+        }
     }
 }
