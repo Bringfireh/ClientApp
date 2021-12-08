@@ -10,6 +10,7 @@ using ClientApp.Models;
 
 namespace ClientApp.Controllers
 {
+    [Authorize]
     public class ClientsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
