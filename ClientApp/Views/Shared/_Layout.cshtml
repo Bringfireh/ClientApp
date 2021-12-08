@@ -21,7 +21,7 @@
         .box{
             position:relative;
             /*max-width:600px;*/
-            padding:50px;
+            padding:30px;
             background:rgba(255,255,255,.2);
             box-shadow:0 5px 15px rgba(0,0,0,.5);
             border-radius:25px;
@@ -47,9 +47,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                    <li><a href="/Clients" @*class="btn btn-default btn-sm"*@>Clients</a></li>
+                    <li><a href="/Contacts" @*class="btn btn-success btn-sm"*@>Contacts</a></li>
+                   
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

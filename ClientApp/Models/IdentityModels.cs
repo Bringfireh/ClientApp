@@ -37,9 +37,6 @@ namespace ClientApp.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Client>()
-                .HasOptional(e => e.Client1)
-                .WithRequired(e => e.Client2);
 
             modelBuilder.Entity<Client>()
                 .HasMany(e => e.ClientContacts)

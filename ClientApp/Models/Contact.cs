@@ -27,7 +27,11 @@ namespace ClientApp.Models
         [StringLength(128)]
         public string OtherNames { get; set; }
 
+        
+        [Required]
+        [Display(Name = "Email Address")]
         [StringLength(128)]
+        [EmailAddress]
         public string EmailAddress { get; set; }
 
         [StringLength(128)]

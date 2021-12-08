@@ -17,7 +17,7 @@ namespace ClientApp.Controllers
         // GET: Clients
         public ActionResult Index()
         {
-            var clients = db.Clients.Include(c => c.Client1);
+            var clients = db.Clients.Include(c => c.ClientContacts);
             return View(clients.ToList());
         }
 

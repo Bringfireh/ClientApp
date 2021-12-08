@@ -33,9 +33,9 @@ namespace ClientApp.Models
 
         public DateTime? DateCreated { get; set; }
 
-        public virtual Client Client1 { get; set; }
+        //public virtual Client Client1 { get; set; }
 
-        public virtual Client Client2 { get; set; }
+        //public virtual Client Client2 { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ClientContact> ClientContacts { get; set; }
