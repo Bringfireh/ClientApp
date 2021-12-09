@@ -88,6 +88,7 @@ namespace ClientApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Contact contact = db.Contacts.Find(id);
+            ViewBag.Count = db.ClientContacts.Where(c => c.ContactCode == id).Count();
             if (contact == null)
             {
                 return HttpNotFound();

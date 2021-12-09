@@ -110,7 +110,7 @@ namespace ClientApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                client.Code = Guid.NewGuid().ToString();
+                client.Code = CheckifExist(client.Name);
                 client.DateCreated = DateTime.Now;
                 db.Clients.Add(client);
                 db.SaveChanges();
@@ -120,7 +120,77 @@ namespace ClientApp.Controllers
             ViewBag.Code = new SelectList(db.Clients, "Code", "Name", client.Code);
             return View(client);
         }
+        public string CheckifExist(string name)
+        {
+            
+            string newcode=GetNextNumber(name);
+            var code = db.Clients.Where(x=>x.Code==newcode).Count();
+            while (code > 0)
+            {
+                newcode = GetNextNumber(name);
+                code = db.Clients.Where(x => x.Code == newcode).Count();
+            }
+            return newcode;
+        }
+        public static String RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public static String RandomNum(int length)
+        {
+            const string chars = "0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+        public static String StringifyNum(int num)
+        {
+            string number = String.Format("{0:000}",num);
+            return number;
+        }
+        public string GetNextNumber(string name)
+        {
+            string returnString = "";
+            string returnNum = "";
+            if (name.Length >= 3)
+            {
+                if(name.Contains(" "))
+                {
+                    string rename = "";
+                    string[] newname = name.Split(' ');
+                    foreach(var n in newname)
+                    {
+                        rename = rename + n.Substring(0, 1);
+                    }
+                    if (rename.Length < 3)
+                    {
+                        rename = rename + RandomString(3 - rename.Length);
+                        returnString = rename;
+                    }else if (rename.Length == 3)
+                    {
+                        returnString = rename;
+                    }else if (rename.Length > 3)
+                    {
+                        returnString = rename.Substring(0, 3);
+                    }
+                }
+                else
+                {
+                    returnString = name.Substring(0, 3);
+                }
 
+            }
+            else
+            {
+                returnString = name + RandomString(3 - name.Length);
+            }
+            returnNum = RandomNum(3);
+            string returncode = returnString.ToUpper() + returnNum;
+            
+
+            return returncode;
+        }
         // GET: Clients/Edit/5
         public ActionResult Edit(string id)
         {
