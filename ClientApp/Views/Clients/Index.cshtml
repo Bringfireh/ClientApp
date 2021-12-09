@@ -1,78 +1,122 @@
-﻿@model IEnumerable<ClientApp.Models.Client>
+﻿@*@model IEnumerable<ClientApp.Models.Client>*@
 
+@using System.Linq;
+@using ClientApp.Models;
+@model PagedList.IPagedList<ClientApp.Models.Client>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "All Clients";
 }
 
 <h2>Clients</h2>
 <div class="box">
-    <p>
-        <a href="/Clients/Create" class="btn btn-primary btn-sm">Create New</a>
-    </p>
-    @if (ViewBag.Count > 0)
-    {
-        <table class="table table-bordered">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Code)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.Website)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Fax)
-                    </th>*@
-                @*<th>
-                         @Html.DisplayNameFor(model => model.Address)
-                     </th>
-                    <th>
-                         @Html.DisplayNameFor(model => model.Description)
-                     </th>
-                     <th>
-                         @Html.DisplayNameFor(model => model.DateCreated)
-                     </th>*@
-                <th></th>
-            </tr>
+    <div class="row">
+        <div class="panel-group" role="tablist" aria-multiselectable="true">
 
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Code)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.Website)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Fax)
-                        </td>*@
-                    @* <td>
-                            @Html.DisplayFor(modelItem => item.Address)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Description)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateCreated)
-                        </td>*@
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.Code }) |
-                        @Html.ActionLink("Details", "Details", new { id = item.Code }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Code })
-                    </td>
-                </tr>
-            }
+            <div class="panel panel-collapse">
+                <div class="panel-heading" role="tab">
 
-        </table>
-    }
-    else
-    {
-        <div class="alert-danger" style="font-size:x-large;text-align:center;border-radius:5px;padding:5px 5px">No Clients Found</div>
-    }
+                    <a href="/Clients/Create" class="btn btn-primary btn-sm">Create New</a>
+                    <span class="pull-right" style="padding-top:-5px;">
+                        <form role="search" action="/Clients/" method="Get">
+                            <div class="input-group md-form form-sm form-2 pl-0">
+                                <input name="SearchString" id="SearchString" class="form-control my-0 py-1 amber-border" placeholder="Search" type="text" style="width:70%;">
+                                <span class="input-group-append"><button type="submit" class="btn btn-primary">Search</button></span>
+
+                            </div>
+                        </form>
+                    </span>
+
+                </div>
+                <div class="panel-body">
+
+                    @if (ViewBag.Count > 0)
+                    {
+                        <table class="table table-bordered">
+                            <tr>
+                                <th width="15%">
+                                    @Html.DisplayName("Code")
+                                </th>
+                                <th width="65">
+                                    @Html.DisplayName("Name")
+                                </th>
+                                <th width="10" style="text-align:center">
+                                    @Html.DisplayName("No of Linked Contacts")
+                                </th>
+                                @* <th>
+            @Html.DisplayNameFor(model => model.Fax)
+        </th>*@
+                                @*<th>
+             @Html.DisplayNameFor(model => model.Address)
+         </th>
+        <th>
+             @Html.DisplayNameFor(model => model.Description)
+         </th>
+         <th>
+             @Html.DisplayNameFor(model => model.DateCreated)
+         </th>*@
+                                <th width="10%"></th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                            <tr>
+                                <td>
+                                    <a href="/Clients/Details/@item.Code">
+                                        @Html.DisplayFor(modelItem => item.Code)
+                                    </a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td align="center">
+                                    @getNumberOfLinkedClients(item.Code)
+                                </td>
+                                @*<td>
+            @Html.DisplayFor(modelItem => item.Fax)
+        </td>*@
+                                @* <td>
+            @Html.DisplayFor(modelItem => item.Address)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DateCreated)
+        </td>*@
+                                <td>
+                                    <a href="/Clients/Edit/@item.Code" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-edit"></span></a>|
+                                    <a href="/Clients/Delete/@item.Code" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove"></span></a>
+                                    @*@Html.ActionLink("Edit", "Edit", new { id = item.Code }) |
+            @Html.ActionLink("Details", "Details", new { id = item.Code }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Code })*@
+                                </td>
+                            </tr>
+                            }
+
+                        </table>
+                        <div>
+                            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+                            @Html.PagedListPager(Model, page => Url.Action("Index",
+                            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert-danger" style="font-size:x-large;text-align:center;border-radius:5px;padding:5px 5px">No Clients Found</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+@functions{
+    private ApplicationDbContext db = new ApplicationDbContext();
+    public int getNumberOfLinkedClients(string txt)
+    {
+        int count = db.ClientContacts.Where(s => s.ClientCode == txt).Count();
+        return count;
+    }
+
+}

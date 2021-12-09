@@ -1,59 +1,83 @@
-﻿@model IEnumerable<ClientApp.Models.Contact>
-
+﻿@*@model IEnumerable<ClientApp.Models.Contact>*@
+@model PagedList.IPagedList<ClientApp.Models.Contact>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Contacts";
 }
 
 <h2>Contacts</h2>
 <div class="box">
-    <p>
-       <a href="/Contacts/Create" class="btn btn-primary btn-sm">Create New</a>
-    </p>
-    <table class="table table-bordered">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Surname)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FirstName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OtherNames)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EmailAddress)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhoneNumber)
-            </th>
-            <th></th>
-        </tr>
+    <div class="row">
+        <div class="panel-group" role="tablist" aria-multiselectable="true">
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FirstName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OtherNames)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.EmailAddress)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.Code }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Code }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Code })
-                </td>
-            </tr>
-        }
+            <div class="panel panel-collapse">
+                <div class="panel-heading" role="tab">
 
-    </table>
+                    <a href="/Contacts/Create" class="btn btn-primary btn-sm">Create New</a>
+                    <span class="pull-right" style="padding-top:-5px;">
+                        <form role="search" action="/Contacts/" method="Get">
+                            <div class="input-group md-form form-sm form-2 pl-0">
+                                <input name="SearchString" id="SearchString2" class="form-control my-0 py-1 amber-border" placeholder="Search" type="text" style="width:70%;">
+                                <span class="input-group-append"><button type="submit" class="btn btn-primary">Search</button></span>
+
+                            </div>
+                        </form>
+                    </span>
+
+                </div>
+                <div class="panel-body">
+
+                    @if (ViewBag.Count > 0)
+                    {
+                        <table class="table table-bordered">
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("Full Name")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Email Address")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("Phone Number")
+                                </th>
+                                <th></th>
+                            </tr>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Surname)&nbsp;@Html.DisplayFor(modelItem => item.FirstName)&nbsp;@Html.DisplayFor(modelItem => item.OtherNames)
+                                                                           
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EmailAddress)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Code }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.Code }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Code })
+                                    </td>
+                                </tr>
+                            }
+
+                        </table>
+                        <div>
+                            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+                            @Html.PagedListPager(Model, page => Url.Action("Index",
+                            new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert-danger" style="font-size:x-large;text-align:center;border-radius:5px;padding:5px 5px">No Contacts Found</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

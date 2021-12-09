@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Client Application</title>
+    <title>@ViewBag.Title - Client Management System.</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <style type="text/css">
@@ -49,7 +49,7 @@
                 <ul class="nav navbar-nav">
                     <li><a href="/Clients" @*class="btn btn-default btn-sm"*@>Clients</a></li>
                     <li><a href="/Contacts" @*class="btn btn-success btn-sm"*@>Contacts</a></li>
-                   
+
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -62,19 +62,84 @@
             <p>&copy; @DateTime.Now.Year - Client Management (+2348039611996)</p>
         </footer>
     </div>
-
+    @Styles.Render("~/bundles/cssjqryUi")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-
+    @Scripts.Render("~/bundles/jqueryui")
     <!-- <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>-->
     <script src="~/Scripts/typed.js" type="text/javascript"></script>
     <script type="text/javascript">
         var typed = new Typed(".auto-input", {
-            strings: ["Client Management","Welcome to Client Management System!", "We help you manage your clients", "and their contact information", "all in one suite."],
+            strings: ["Client Management", "Welcome to Client Management System!", "We help you manage your clients", "and their contact information", "all in one suite."],
             typeSpeed: 100,
             backSpeed: 100,
             loop: true
         });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("#SearchString").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Clients/AutoComplete/',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                //select: function (e, i) {
+                //    $("#ftsearch").val(i.item.val);
+                //},
+                //minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+        });
+        $(function () {
+            $("#SearchString2").autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: '/Contacts/AutoComplete/',
+                        data: "{ 'prefix': '" + request.term + "'}",
+                        dataType: "json",
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data) {
+                            response($.map(data, function (item) {
+                                return item;
+                            }))
+                        },
+                        error: function (response) {
+                            alert(response.responseText);
+                        },
+                        failure: function (response) {
+                            alert(response.responseText);
+                        }
+                    });
+                },
+                //select: function (e, i) {
+                //    $("#ftsearch").val(i.item.val);
+                //},
+                //minLength: 0
+            }).focus(function () {
+                $(this).autocomplete("search");
+            });
+        });
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
     @RenderSection("scripts", required: false)
 </body>

@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web;
+using PagedList;
 using System.Web.Mvc;
 using ClientApp.Models;
 
@@ -16,11 +17,69 @@ namespace ClientApp.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Contacts
-        public ActionResult Index()
+        public ActionResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            return View(db.Contacts.ToList());
-        }
+            //var contacts =db.Contacts.ToList();
+            ViewBag.CurrentSort = sortOrder;
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+            ViewBag.DateSortParm = sortOrder == "client_name" ? "client_desc" : "client_name";
 
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+
+
+            var contacts = from b in db.Contacts
+                       select b;
+            
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var con = from x in db.Contacts
+                          select new { contac = x, Name = x.Surname + " " + x.FirstName + " " + x.OtherNames, RevName = x.FirstName + " " + x.OtherNames + " " + x.Surname};
+                contacts = con.Where(s=>s.Name.Contains(searchString) || s.RevName.Contains(searchString)).Select(s=>s.contac);
+                            
+                
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    contacts = contacts.OrderByDescending(g=>g.Surname);
+                    break;
+                case "client_name":
+                    contacts = contacts.OrderBy(s => s.OtherNames);
+                    break;
+
+                default:  // Name ascending 
+                    contacts = contacts.OrderBy(g => g.Surname);
+                    break;
+            }
+            ViewBag.Count = contacts.Count();
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+            return View(contacts.ToPagedList(pageNumber, pageSize));
+            
+            //return View(contacts);
+        }
+        [HttpPost]
+        public JsonResult AutoComplete(string prefix)
+        {
+
+            var contacts = from s in db.Contacts
+                          where (s.FirstName.Contains(prefix) || s.Surname.Contains(prefix) || s.OtherNames.Contains(prefix))
+                          select new { label = s.Surname + " " + s.FirstName+ " "+ s.OtherNames, val = s.Code };
+
+
+            return Json(contacts);
+
+        }
         // GET: Contacts/Details/5
         public ActionResult Details(string id)
         {
