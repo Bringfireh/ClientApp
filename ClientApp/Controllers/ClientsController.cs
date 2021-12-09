@@ -18,7 +18,9 @@ namespace ClientApp.Controllers
         // GET: Clients
         public ActionResult Index()
         {
+
             var clients = db.Clients.Include(c => c.ClientContacts);
+            ViewBag.Count = clients.Count();
             return View(clients.ToList());
         }
 
@@ -53,6 +55,8 @@ namespace ClientApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                client.Code = Guid.NewGuid().ToString();
+                client.DateCreated = DateTime.Now;
                 db.Clients.Add(client);
                 db.SaveChanges();
                 return RedirectToAction("Index");
