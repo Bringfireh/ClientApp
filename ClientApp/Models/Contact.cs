@@ -22,9 +22,11 @@ namespace ClientApp.Models
         public string Surname { get; set; }
 
         [StringLength(128)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [StringLength(128)]
+        [Display(Name = "Other Names")]
         public string OtherNames { get; set; }
 
         
@@ -35,6 +37,7 @@ namespace ClientApp.Models
         public string EmailAddress { get; set; }
 
         [StringLength(128)]
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

@@ -31,6 +31,7 @@ namespace ClientApp.Models
 
         public string Description { get; set; }
 
+        [Display(Name = "Date Created")]
         public DateTime? DateCreated { get; set; }
 
         //public virtual Client Client1 { get; set; }
