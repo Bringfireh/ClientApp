@@ -1,0 +1,57 @@
+﻿@model IEnumerable<ClientApp.Models.Contact>
+
+@{
+    ViewBag.Title = "Link Contact";
+}
+
+<h2>Link Contact</h2>
+
+<div class="box">
+    <a href="/Clients/Details/@ViewBag.ClientCode" class="btn btn-primary btn-sm">Go Back</a>
+    <br />
+    <table class="table table-bordered">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OtherNames)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EmailAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OtherNames)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EmailAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhoneNumber)
+                </td>
+                <td>
+                    <a href="/ClientContacts/LinkNow?ContactCode=@item.Code&ClientCode=@ViewBag.ClientCode&refpage=contacts" class="btn btn-primary btn-sm">Link</a>
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>

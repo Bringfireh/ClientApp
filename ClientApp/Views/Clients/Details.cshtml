@@ -65,6 +65,51 @@
     </div>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.Code }) |
-        @Html.ActionLink("Back to List", "Index")
+        @Html.ActionLink("Back to List", "Index")   |   <a href="/ClientContacts/LinkContact?ClientCode=@Model.Code" class="btn btn-primary btn-sm">Link New Contact</a>
     </p>
+    @if (ViewBag.Count > 0)
+    {
+        <table class="table table-bordered">
+            <tr>
+                <th>
+                    @Html.DisplayName("Full Name")
+                </th>
+                <th>
+                    @Html.DisplayName("Email Address")
+                </th>
+                <th>
+                    @Html.DisplayName("Phone Number")
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model.ClientContacts)
+            {
+                <tr>
+                    <td>
+                        <a href="/Contacts/Details/@item.Code" @*class="btn btn-primary btn-sm"*@>
+                            @Html.DisplayFor(modelItem => item.Contact.Surname)&nbsp;@Html.DisplayFor(modelItem => item.Contact.FirstName)&nbsp;@Html.DisplayFor(modelItem => item.Contact.OtherNames)
+                        </a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contact.EmailAddress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Contact.PhoneNumber)
+                    </td>
+                    <td>
+                        
+                        <a href="/ClientContacts/UnLink?id=@item.Code&refpage=contacts" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove"></span>Un-Link</a>
+                       
+                    </td>
+                </tr>
+            }
+
+        </table>
+        
+    }
+    else
+    {
+        <div class="alert-danger" style="font-size:x-large;text-align:center;border-radius:5px;padding:5px 5px">No Contacts Found</div>
+    }
 </div>

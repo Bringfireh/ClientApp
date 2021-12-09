@@ -110,6 +110,7 @@ namespace ClientApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                contact.Code = Guid.NewGuid().ToString().Substring(0,16);
                 db.Contacts.Add(contact);
                 db.SaveChanges();
                 return RedirectToAction("Index");

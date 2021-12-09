@@ -328,6 +328,7 @@
     <Content Include="Views\ClientContacts\Details.cshtml" />
     <Content Include="Views\ClientContacts\Edit.cshtml" />
     <Content Include="Views\ClientContacts\Index.cshtml" />
+    <Content Include="Views\ClientContacts\LinkContact.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

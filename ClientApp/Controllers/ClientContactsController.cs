@@ -10,7 +10,7 @@ using ClientApp.Models;
 
 namespace ClientApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin,SuperAdmin")]
     public class ClientContactsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -36,7 +36,60 @@ namespace ClientApp.Controllers
             }
             return View(clientContact);
         }
+        [AllowAnonymous]
+        public ViewResult LinkContact(string ClientCode)
+        {
+            ViewBag.ClientCode = ClientCode;
+            var contacts = db.Contacts.ToList();
+            return View(contacts);
+        }
+        [AllowAnonymous]
+        public ActionResult UnLink(string id, string refpage)
+        {
+            ClientContact cc = db.ClientContacts.Find(id);
+            string clientcode = cc.ClientCode;
+            string contactcode = cc.ContactCode;
+            db.ClientContacts.Remove(cc);
+            db.SaveChanges();
+            string urladd = "";
+            if (refpage == "contacts")
+            {
+                urladd = "/Clients/Details/" + clientcode;
+            }
+            else
+            {
+                urladd = "/Contacts/Details/" + contactcode;
+            }
+            return Redirect(urladd);
+        }
+        [AllowAnonymous]
+        public ActionResult LinkNow(string ContactCode, string ClientCode, string refpage)
+        {
+            var checkExistence = db.ClientContacts.Where(c => c.ContactCode == ContactCode & c.ClientCode == ClientCode).Count();
+            if (checkExistence > 0)
+            {
 
+            }
+            else
+            {
+                ClientContact cc = new ClientContact();
+                cc.Code = Guid.NewGuid().ToString();
+                cc.ContactCode = ContactCode;
+                cc.ClientCode = ClientCode;
+                db.ClientContacts.Add(cc);
+                db.SaveChanges();
+            }
+            string urladd = "";
+            if (refpage == "contacts")
+            {
+                urladd = "/Clients/Details/" + ClientCode;
+            }
+            else
+            {
+                urladd = "/Contacts/Details/" + ContactCode;
+            }
+            return Redirect(urladd);
+        }
         // GET: ClientContacts/Create
         public ActionResult Create()
         {

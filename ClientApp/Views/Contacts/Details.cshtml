@@ -56,4 +56,46 @@
         @Html.ActionLink("Edit", "Edit", new { id = Model.Code }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
+    @if (ViewBag.Count > 0)
+    {
+        <table class="table table-bordered">
+            <tr>
+                <th width="15%">
+                    @Html.DisplayName("Code")
+                </th>
+                <th width="75">
+                    @Html.DisplayName("Name")
+                </th>
+
+
+                <th width="10%"></th>
+            </tr>
+
+            @foreach (var item in Model.ClientContacts)
+            {
+                <tr>
+                    <td>
+
+                        @Html.DisplayFor(modelItem => item.Client.Code)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Client.Name)
+                    </td>
+
+                    <td>
+
+                        <a href="/ClientContacts/UnLink?id=@item.Code&refpage=clients" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-remove"></span>Un-Link</a>
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+    }
+    else
+    {
+        <div class="alert-danger" style="font-size:x-large;text-align:center;border-radius:5px;padding:5px 5px">No Contacts Found</div>
+    }
 </div>

@@ -74,6 +74,7 @@ namespace ClientApp.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Client client = db.Clients.Find(id);
+            ViewBag.Count = db.ClientContacts.Where(s => s.ClientCode == id).Count();
             if (client == null)
             {
                 return HttpNotFound();
@@ -92,6 +93,7 @@ namespace ClientApp.Controllers
             return Json(clients);
 
         }
+       
         // GET: Clients/Create
         public ActionResult Create()
         {
